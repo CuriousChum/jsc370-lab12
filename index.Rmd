@@ -9,6 +9,29 @@ output:
 
 This is my JSC370 Final Project website.
 
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
+```
+
 ```{r}
 source("process_starbucks_data.R")
 ```
+
+```{r}
+p1 <- sb_locs_state |>
+  ggplot(aes(x=population, y=n_stores, color=state)) +
+  geom_point(alpha=0.8) +
+  theme_bw()
+
+ggplotly(p1)
+```
+
+```{r}
+p2 <- sb_nutr |>
+  ggplot(aes(x=Calories, fill=Category)) +
+  geom_histogram(alpha=0.8) +
+  theme_bw()
+
+ggplotly(p2)
+```
+
