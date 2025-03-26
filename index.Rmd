@@ -8,3 +8,7 @@ output:
 ---
 
 This is my JSC370 Final Project website.
+
+```{r}
+source("process_starbucks_data.R")
+```
