@@ -1,13 +1,13 @@
 ---
 title: "JSC370 Final Project"
-author: "Your Name"
+author: "Louis Ryan Tan"
 output: 
     html_document:
         toc: TRUE
         toc_float: TRUE
 ---
 
-This is my JSC370 Final Project website.
+This is (an example of what) my JSC370 Final Project website (will probably look like).
 
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
@@ -17,21 +17,46 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
 source("process_starbucks_data.R")
 ```
 
+## Example Plots {.tabset}
+
+### Figure 1
 ```{r}
 p1 <- sb_locs_state |>
   ggplot(aes(x=population, y=n_stores, color=state)) +
   geom_point(alpha=0.8) +
+  xlab("number of stores") + 
+  ylab("population") + 
+  ggtitle("Plot of population vs. number of Starbuck stores is various US states") +
   theme_bw()
 
 ggplotly(p1)
 ```
 
+### Figure 2
 ```{r}
-p2 <- sb_nutr |>
-  ggplot(aes(x=Calories, fill=Category)) +
-  geom_histogram(alpha=0.8) +
-  theme_bw()
+# Set up mapping details
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('steelblue')
+)
 
-ggplotly(p2)
+# Make sure both maps are on the same color scale
+shadeLimit <- 125
+
+# Create hover text
+sb_locs_state$hover <- with(sb_locs_state, paste("Number of Starbucks: ", n_stores, '<br>', "State: ", state.y, '<br>', "Population: ", population))
+
+# Create the map
+map1 <- plot_geo(sb_locs_state, locationmode='USA-states') |>
+  add_trace(z = ~n_stores, text= ~hover, locations= ~state, color= ~n_stores, colors='Purples') |>
+  layout(geo=set_map_details)
+
+map2 <- plot_geo(sb_locs_state, locationmode='USA-states') |>
+  add_trace(z = ~population, text= ~hover, locations= ~state, color= ~population, colors='Purples') |>
+  layout(geo=set_map_details)
+
+subplot(map1, map2)
 ```
 
